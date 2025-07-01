@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/auth")
 public class DoctorController {
@@ -17,11 +17,17 @@ public class DoctorController {
     // ✅ Register a new doctor
     @PostMapping("/register")
     public String register(@RequestBody Doctor doctor) {
-        return doctorService.registerUser(doctor);
+        try {
+            return doctorService.registerUser(doctor);
+        } catch (Exception e) {
+            e.printStackTrace(); // Print error in Eclipse console
+            return "Error: " + e.getMessage();
+        }
     }
 
+
     // ✅ Login doctor
-    @PostMapping("/login")
+    @PostMapping("/Doc-login")
     public String login(@RequestBody Doctor doctor) {
         return doctorService.loginUser(doctor.getEmail(), doctor.getPassword());
     }
@@ -44,9 +50,4 @@ public class DoctorController {
         return doctorService.updateDoctor(id, updatedDoctor);
     }
 
-    // ✅ Dummy logout
-//    @PostMapping("/logout")
-//    public String logout(@RequestParam String email) {
-//        return doctorService.logoutUser(email);
-//    }
 }
